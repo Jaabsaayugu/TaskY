@@ -99,12 +99,11 @@ export default function TaskList() {
       >
         <MenuIcon />
         <Typography variant="h6" noWrap color="navy">
-           Dashboard
-      </Typography>
+          Dashboard
+        </Typography>
       </IconButton>
-      
+
       <List>
-        
         <ListItemButton onClick={() => navigate("/newTask")}>
           <ListItemIcon>
             <AddIcon />

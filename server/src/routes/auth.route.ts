@@ -16,7 +16,6 @@ router.get("/me", verifyToken, (req, res) => {
   res.json(req.user);
 });
 
-
 router.post(
   "/register",
   verifyUserInformation,

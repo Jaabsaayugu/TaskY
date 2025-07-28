@@ -65,7 +65,7 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.post("/", verifyToken, async (req: Request, res: Response) => {
-  const { title, description,  } = req.body;
+  const { title, description } = req.body;
 
   try {
     const task = await prisma.task.create({
@@ -85,13 +85,15 @@ router.post("/", verifyToken, async (req: Request, res: Response) => {
 
 router.patch("/:id", verifyToken, async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title,  description,  } = req.body;
+  const { title, description } = req.body;
 
   try {
     const existing = await prisma.task.findUnique({ where: { id } });
 
     if (!existing || existing.userId !== req.user!.id) {
-      return res.status(403).json({ message: "Unauthorized or task not found" });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized or task not found" });
     }
 
     const updated = await prisma.task.update({
@@ -116,7 +118,9 @@ router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
     const task = await prisma.task.findUnique({ where: { id } });
 
     if (!task || task.userId !== req.user!.id) {
-      return res.status(403).json({ message: "Unauthorized or task not found" });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized or task not found" });
     }
 
     await prisma.task.update({

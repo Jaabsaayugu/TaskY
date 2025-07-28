@@ -24,7 +24,6 @@ export function verifyToken(
   const token = authHeader && authHeader.split(" ")[1];
   console.log("token:", token);
 
-
   if (!token) {
     res.status(401).json({ message: "Access token required" });
     return;

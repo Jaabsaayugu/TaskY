@@ -18,7 +18,7 @@ export const registerUser = async (req: Request, res: Response) => {
         email,
         username,
         password: hashedPassword,
-        // avatar: null, 
+        // avatar: null,
         dateJoined: new Date(),
         lastUpdate: new Date(),
         isDeleted: false,
@@ -64,17 +64,17 @@ export const loginUser = async (req: Request, res: Response) => {
           },
         ],
       },
-       select: {
-    id: true,
-    email: true,
-    username: true,
-    password: true, 
-    firstName: true,
-    lastName: true,
-    dateJoined: true,
-    lastUpdate: true,
-    isDeleted: true,
-  },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        password: true,
+        firstName: true,
+        lastName: true,
+        dateJoined: true,
+        lastUpdate: true,
+        isDeleted: true,
+      },
     });
 
     if (!user) {
@@ -97,7 +97,7 @@ export const loginUser = async (req: Request, res: Response) => {
         username: user.username,
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" }, 
+      { expiresIn: "7d" },
     );
 
     res
@@ -105,7 +105,7 @@ export const loginUser = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, 
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .json({
         message: "Login successful",
@@ -149,7 +149,6 @@ export const updatePassword = async (req: Request, res: Response) => {
       });
       return;
     }
-
 
     if (newPassword !== confirmNewPassword) {
       res.status(400).json({ message: "New passwords do not match" });
