@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
-// import taskRouter from "./routes/task.route";
+import taskRouter from "./routes/task.route";
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ app.get("/", (_req, res) => {
 //     res.send("Registering User");
 // })
 app.use("/api/auth", authRouter);
-// app.use("/api/tasks", taskRouter);
+app.use("/api/tasks", taskRouter);
 app.use("/api/user", userRouter);
 
 const port = process.env.PORT || 4000;

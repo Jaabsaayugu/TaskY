@@ -17,7 +17,22 @@ model User {
   isDeleted  Boolean  @default(false)
   lastUpdate DateTime @updatedAt @map("last_update")
   dateJoined DateTime @default(now()) @map("date_joined")
-  // tasks     Task[]
+  tasks     Task[]
 
   @@map("users")
 }
+
+model Task {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  isDeleted    Boolean  @default(false)
+  isCompleted  Boolean  @default(false)
+  dateCreated  DateTime @default(now())
+  dateUpdated  DateTime @updatedAt
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+
+    @@map("tasks")
+  }

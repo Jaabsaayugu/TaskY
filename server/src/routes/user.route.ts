@@ -7,7 +7,6 @@ import { verifyToken } from "../middleware/verifyToken";
 const router = Router();
 const prisma = new PrismaClient();
 
-// GET /api/user - Get logged in user's details
 router.get("/", verifyToken, async (req, res): Promise<void> => {
   if (!req.user) {
     res.status(401).json({ message: "Unauthorized" });
@@ -41,7 +40,6 @@ router.get("/", verifyToken, async (req, res): Promise<void> => {
   }
 });
 
-// PATCH /api/user - Update logged in user's primary information
 router.patch("/", verifyToken, async (req, res): Promise<void> => {
   const { firstName, lastName, username, email } = req.body;
 
@@ -51,7 +49,6 @@ router.patch("/", verifyToken, async (req, res): Promise<void> => {
   }
 
   try {
-    // Check if username or email already exists for other users
     if (username || email) {
       const existingUser = await prisma.user.findFirst({
         where: {
@@ -83,7 +80,6 @@ router.patch("/", verifyToken, async (req, res): Promise<void> => {
     if (lastName) updateData.lastName = lastName;
     if (username) updateData.username = username;
     if (email) updateData.email = email;
-    // if (avatar !== undefined) updateData.avatar = avatar;
 
     const updated = await prisma.user.update({
       where: { id: req.user.id },
@@ -108,7 +104,6 @@ router.patch("/", verifyToken, async (req, res): Promise<void> => {
   }
 });
 
-// PATCH /api/user/password - Update user's password (moved from auth routes as per requirements)
 router.patch("/password", verifyToken, async (req, res): Promise<void> => {
   const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
@@ -117,7 +112,6 @@ router.patch("/password", verifyToken, async (req, res): Promise<void> => {
     return;
   }
 
-  // Validate required fields
   if (!currentPassword || !newPassword || !confirmNewPassword) {
     res.status(400).json({
       message:
@@ -126,7 +120,6 @@ router.patch("/password", verifyToken, async (req, res): Promise<void> => {
     return;
   }
 
-  // Check if new passwords match
   if (newPassword !== confirmNewPassword) {
     res.status(400).json({ message: "New passwords do not match" });
     return;
@@ -143,7 +136,6 @@ router.patch("/password", verifyToken, async (req, res): Promise<void> => {
       return;
     }
 
-    // Verify current password
     const validCurrentPassword = await bcrypt.compare(
       currentPassword,
       user.password,
@@ -153,7 +145,6 @@ router.patch("/password", verifyToken, async (req, res): Promise<void> => {
       return;
     }
 
-    // Hash new password
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({

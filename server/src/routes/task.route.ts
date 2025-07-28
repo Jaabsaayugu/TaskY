@@ -1,91 +1,134 @@
-// import { Router } from "express";
-// import { Request, Response } from "express";
-// import { PrismaClient } from "@prisma/client";
-// import { verifyToken } from "../middleware/verifyToken";
+import { Router, Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import { verifyToken } from "../middleware/verifyToken";
 
-// const router = Router();
-// const prisma = new PrismaClient();
+const router = Router();
+const prisma = new PrismaClient();
 
-// router.get("/", async (_req, res) => {
-//   const tasks = await prisma.task.findMany({
-//     where: { isDeleted: false },
-//     include: { user: true },
-//     orderBy: { createdAt: "desc" },
-//   });
-
-//   res.json(tasks);
-// });
-
-// router.get("/tasks/:id", verifyToken, async (req, res) => {
-//   const { id } = req.params;
-
+// router.get("/", verifyToken,async (_req: Request, res: Response) => {
 //   try {
-//     const task = await prisma.task.findUnique({
-//       where: { id },
-//       include: {
-//          user: {
-//           select: {firstName: true, lastName: true },
-//          },
-//         },
+//     const tasks = await prisma.task.findMany({
+//       where: { isDeleted: false },
+//       include: { user: true },
+//       orderBy: { dateCreated: "desc" },
 //     });
 
-//     if (!task || task.isDeleted) {
-//       res.status(404).json({ message: "task not found" });
-//     }
-
-//     res.json(task);
+//     res.json(tasks);
 //   } catch (error) {
-//     console.error("Error fetching task:", error);
-//     res.status(500).json({ message: "Failed to fetch task" });
+//     console.error("Error fetching tasks:", error);
+//     res.status(500).json({ message: "Failed to fetch tasks" });
 //   }
 // });
 
-// router.post("/", verifyToken, async (req, res) => {
-//   const { title, synopsis, content, imageUrl } = req.body;
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id;
 
-//   const task = await prisma.task.create({
-//     data: {
-//       title,
-//       synopsis,
-//       content,
-//       imageUrl,
-//       userId: req.user!.id,
-//     },
-//   });
+    const tasks = await prisma.task.findMany({
+      where: {
+        userId: userId,
+        isDeleted: false,
+      },
+      include: { user: true },
+      orderBy: { dateCreated: "desc" },
+    });
 
-//   res.status(201).json(task);
-// });
+    res.json(tasks);
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ message: "Failed to fetch tasks" });
+  }
+});
 
-// router.patch("/:id", verifyToken, async (req, res) => {
-//   const { title, synopsis, content, imageUrl } = req.body;
+router.get("/:id", verifyToken, async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-//   const existing = await prisma.task.findUnique({
-//     where: { id: req.params.id },
-//   });
-//   if (!existing || existing.userId !== req.user!.id) {
-//     res.status(403).json({ message: "Unauthorized or task not found" });
-//   }
+  try {
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: { firstName: true, lastName: true },
+        },
+      },
+    });
 
-//   const updated = await prisma.task.update({
-//     where: { id: req.params.id },
-//     data: { title, synopsis, content, imageUrl },
-//   });
+    if (!task || task.isDeleted) {
+      return res.status(404).json({ message: "Task not found" });
+    }
 
-//   res.json(updated);
-// });
+    res.json(task);
+  } catch (error) {
+    console.error("Error fetching task:", error);
+    res.status(500).json({ message: "Failed to fetch task" });
+  }
+});
 
-// router.delete("/:id", verifyToken, async (req, res) => {
-//   const task = await prisma.task.findUnique({ where: { id: req.params.id } });
-//   if (!task || task.userId !== req.user!.id) {
-//     res.status(403).json({ message: "Unauthorized or task not found" });
-//   }
+router.post("/", verifyToken, async (req: Request, res: Response) => {
+  const { title, description,  } = req.body;
 
-//   await prisma.task.update({
-//     where: { id: req.params.id },
-//     data: { isDeleted: true },
-//   });
+  try {
+    const task = await prisma.task.create({
+      data: {
+        title,
+        description,
+        userId: req.user!.id,
+      },
+    });
 
-//   res.json({ message: "Task deleted" });
-// });
+    res.status(201).json(task);
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ message: "Failed to create task" });
+  }
+});
 
-// export default router;
+router.patch("/:id", verifyToken, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title,  description,  } = req.body;
+
+  try {
+    const existing = await prisma.task.findUnique({ where: { id } });
+
+    if (!existing || existing.userId !== req.user!.id) {
+      return res.status(403).json({ message: "Unauthorized or task not found" });
+    }
+
+    const updated = await prisma.task.update({
+      where: { id },
+      data: {
+        title,
+        description,
+      },
+    });
+
+    res.json(updated);
+  } catch (error) {
+    console.error("Error updating task:", error);
+    res.status(500).json({ message: "Failed to update task" });
+  }
+});
+
+router.delete("/:id", verifyToken, async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const task = await prisma.task.findUnique({ where: { id } });
+
+    if (!task || task.userId !== req.user!.id) {
+      return res.status(403).json({ message: "Unauthorized or task not found" });
+    }
+
+    await prisma.task.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    res.status(500).json({ message: "Failed to delete task" });
+  }
+});
+
+export default router;

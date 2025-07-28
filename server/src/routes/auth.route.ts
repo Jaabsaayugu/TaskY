@@ -12,7 +12,11 @@ import {
 
 const router: Router = Router();
 
-// POST /api/auth/register - Register a new user
+router.get("/me", verifyToken, (req, res) => {
+  res.json(req.user);
+});
+
+
 router.post(
   "/register",
   verifyUserInformation,
@@ -21,13 +25,9 @@ router.post(
   registerUser,
 );
 
-// POST /api/auth/login - Login a user
 router.post("/login", loginUser);
-
-// POST /api/auth/logout - Logout a user
 router.post("/logout", verifyToken, logoutUser);
 
-// PATCH /api/auth/password - Update a specific user's password
 router.patch("/password", verifyToken, verifyPasswordStrength, updatePassword);
 
 export default router;

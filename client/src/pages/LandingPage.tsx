@@ -71,7 +71,7 @@ function LandingPage() {
           </Box>
         </Container>
 
-        <Box>
+        <Box >
           <Paper>
             <Typography
               variant="h3"

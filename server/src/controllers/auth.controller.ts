@@ -18,10 +18,10 @@ export const registerUser = async (req: Request, res: Response) => {
         email,
         username,
         password: hashedPassword,
-        // avatar: null, // Default avatar value
+        // avatar: null, 
         dateJoined: new Date(),
         lastUpdate: new Date(),
-        isDeleted: false, // Default value
+        isDeleted: false,
       },
       select: {
         id: true,
@@ -64,6 +64,17 @@ export const loginUser = async (req: Request, res: Response) => {
           },
         ],
       },
+       select: {
+    id: true,
+    email: true,
+    username: true,
+    password: true, 
+    firstName: true,
+    lastName: true,
+    dateJoined: true,
+    lastUpdate: true,
+    isDeleted: true,
+  },
     });
 
     if (!user) {
@@ -71,17 +82,14 @@ export const loginUser = async (req: Request, res: Response) => {
       return;
     }
 
-    // Verifying password
     const passAuth = await bcrypt.compare(password, user.password);
     if (!passAuth) {
       res.status(400).json({ message: "You Entered Wrong Login Credentials" });
       return;
     }
 
-    // Exclude sensitive fields from user object
     const { password: loginPassword, ...userDetails } = user;
 
-    // Generate JWT token
     const token = jwt.sign(
       {
         id: user.id,
@@ -89,16 +97,15 @@ export const loginUser = async (req: Request, res: Response) => {
         username: user.username,
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" }, // Token expires in 7 days
+      { expiresIn: "7d" }, 
     );
 
-    // Set cookie and return response
     res
       .cookie("authToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000, 
       })
       .json({
         message: "Login successful",
@@ -113,7 +120,6 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    // Clear the authentication cookie
     res.clearCookie("authToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -136,7 +142,6 @@ export const updatePassword = async (req: Request, res: Response) => {
   }
 
   try {
-    // Validate required fields
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       res.status(400).json({
         message:
@@ -145,13 +150,12 @@ export const updatePassword = async (req: Request, res: Response) => {
       return;
     }
 
-    // Check if new passwords match
+
     if (newPassword !== confirmNewPassword) {
       res.status(400).json({ message: "New passwords do not match" });
       return;
     }
 
-    // Find user
     const user = await client.user.findUnique({
       where: { id: req.user.id },
       select: { id: true, password: true, isDeleted: true },
@@ -162,7 +166,6 @@ export const updatePassword = async (req: Request, res: Response) => {
       return;
     }
 
-    // Verify current password
     const validCurrentPassword = await bcrypt.compare(
       currentPassword,
       user.password,
@@ -172,10 +175,8 @@ export const updatePassword = async (req: Request, res: Response) => {
       return;
     }
 
-    // Hash new password
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update password
     await client.user.update({
       where: { id: req.user.id },
       data: {
