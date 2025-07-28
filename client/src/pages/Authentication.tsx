@@ -59,7 +59,7 @@ const Login: React.FC = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/auth/register",
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
         {
           firstName,
           lastName,
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const response = await axios.post<{ token: string; user: any }>(
-        "http://localhost:4000/api/auth/login",
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
         {
           identifier: email,
           password,
