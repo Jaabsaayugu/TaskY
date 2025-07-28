@@ -90,6 +90,9 @@ const Login: React.FC = () => {
           password,
           rememberMe,
         },
+        {
+        withCredentials: true, 
+      }
       );
 
       const { token, user } = response.data;
