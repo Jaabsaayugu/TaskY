@@ -12,20 +12,20 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  'http://localhost:5173',                  
-  'https://task-y-nine.vercel.app'          
+  "http://localhost:5173",
+  "https://task-y-nine.vercel.app",
 ];
 
 app.use(
   cors({
     // origin: `https://task-y-nine.vercel.app/`,
     origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["POST", "GET", "PATCH", "PUT", "DELETE"],
     credentials: true,
   }),
