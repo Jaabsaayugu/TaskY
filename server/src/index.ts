@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "*****frontend deployed****"],
+    origin: ["http://localhost:5173", "https://task-y-nine.vercel.app/"],
     methods: ["POST", "GET", "PATCH", "PUT", "DELETE"],
     credentials: true,
   }),
