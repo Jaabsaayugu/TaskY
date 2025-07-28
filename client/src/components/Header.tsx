@@ -5,7 +5,7 @@ import {
   Button,
   Divider,
   Stack,
-  Avatar,
+  // Avatar,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -14,10 +14,10 @@ import useUser from "../store/userStore";
 const Header: React.FC = () => {
   const user = useUser((state) => state.user);
 
-  const getInitials = (firstName?: string, lastName?: string) => {
-    if (!firstName || !lastName) return "U";
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-  };
+  // const getInitials = (firstName?: string, lastName?: string) => {
+  //   if (!firstName || !lastName) return "U";
+  //   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  // };
 
   const navLinks = [
     { label: "Tasks", path: "/taskList" },
