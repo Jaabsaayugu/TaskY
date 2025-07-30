@@ -140,7 +140,7 @@ const NewTask: React.FC = () => {
               />
               
               <Grid container spacing={2}>
-                <Box>
+                
                   <Button
                     type="submit"
                     variant="contained"
@@ -150,9 +150,7 @@ const NewTask: React.FC = () => {
                   >
                     {isPending ? "Creating..." : "Create Task"}
                   </Button>
-                </Box>
                 
-                <Box >
                   <Button
                     type="button"
                     variant="outlined"
@@ -163,7 +161,7 @@ const NewTask: React.FC = () => {
                   >
                     Cancel
                   </Button>
-                </Box>
+                
               </Grid>
             </Stack>
           </form>
