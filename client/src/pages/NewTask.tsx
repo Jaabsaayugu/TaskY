@@ -139,7 +139,6 @@ const NewTask: React.FC = () => {
                 helperText={!description.trim() && formError !== null ? "Description is required" : ""}
               />
               
-              <Grid container spacing={2}>
                 
                   <Button
                     type="submit"
@@ -162,7 +161,7 @@ const NewTask: React.FC = () => {
                     Cancel
                   </Button>
                 
-              </Grid>
+              
             </Stack>
           </form>
         </Paper>
