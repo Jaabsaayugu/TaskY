@@ -10,7 +10,7 @@ import NewTask from "./pages/NewTask";
 import Profile from "./pages/Profile";
 import CompletedTasks from "./pages/CompletedTasks";
 import Trash from "./pages/Trash";
-import UpdateTask from "./pages/UpdateTask"; 
+import UpdateTask from "./pages/UpdateTask";
 import Layout from "./components/layout";
 
 function App() {

@@ -7,7 +7,7 @@
     "skipLibCheck": true,
 
     "moduleResolution": "Node",
-    "esModuleInterop": true, 
+    "esModuleInterop": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",

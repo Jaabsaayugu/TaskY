@@ -80,7 +80,7 @@ export const getTask = async (req: Request, res: Response): Promise<void> => {
       where: {
         id,
         userId,
-        isDeleted: false, 
+        isDeleted: false,
       },
     });
 
@@ -188,9 +188,9 @@ export const deleteTask = async (
 
     await prisma.task.update({
       where: { id },
-      data: { 
+      data: {
         isDeleted: true,
-        dateUpdated: new Date(), 
+        dateUpdated: new Date(),
       },
     });
 
@@ -229,9 +229,9 @@ export const restoreTask = async (
 
     const restoredTask = await prisma.task.update({
       where: { id },
-      data: { 
+      data: {
         isDeleted: false,
-        dateUpdated: new Date(), 
+        dateUpdated: new Date(),
       },
     });
 
@@ -273,7 +273,7 @@ export const completeTask = async (
 
     const completedTask = await prisma.task.update({
       where: { id },
-      data: { 
+      data: {
         isCompleted: true,
         dateUpdated: new Date(),
       },
@@ -317,7 +317,7 @@ export const incompleteTask = async (
 
     const incompleteTask = await prisma.task.update({
       where: { id },
-      data: { 
+      data: {
         isCompleted: false,
         dateUpdated: new Date(),
       },

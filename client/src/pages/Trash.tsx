@@ -39,33 +39,36 @@ const Trash: React.FC = () => {
           return;
         }
 
-        const response = await axios.get<{ tasks: Task[] }>("/api/tasks/deleted", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get<{ tasks: Task[] }>(
+          "/api/tasks/deleted",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         console.log("Fetched deleted tasks:", response.data);
 
         const tasksData = response.data.tasks || response.data;
-        
+
         if (Array.isArray(tasksData)) {
           setTasks(tasksData);
         } else {
           console.warn("Expected an array but got:", tasksData);
           setTasks([]);
         }
-        
+
         setError(null);
       } catch (error: any) {
         console.error("Failed to fetch deleted tasks:", error);
-        
+
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
           navigate("/login");
           return;
         }
-        
+
         setError("Failed to load deleted tasks. Please try again.");
         setTasks([]);
       } finally {
@@ -84,15 +87,19 @@ const Trash: React.FC = () => {
         return;
       }
 
-      await axios.patch(`/api/tasks/${taskId}/restore`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.patch(
+        `/api/tasks/${taskId}/restore`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       setTasks((prev) => prev.filter((task) => task.id !== taskId));
       setError(null);
-      
+
       const successAlert = document.createElement("div");
       successAlert.innerHTML = "Task restored successfully!";
       successAlert.style.cssText = `
@@ -102,16 +109,15 @@ const Trash: React.FC = () => {
       `;
       document.body.appendChild(successAlert);
       setTimeout(() => document.body.removeChild(successAlert), 3000);
-      
     } catch (error: any) {
       console.error("Failed to restore task:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       setError("Failed to restore task. Please try again.");
     }
   };

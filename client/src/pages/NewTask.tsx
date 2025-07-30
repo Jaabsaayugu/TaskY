@@ -54,13 +54,13 @@ const NewTask: React.FC = () => {
     },
     onError: (err: any) => {
       console.error("Create task error:", err);
-      
+
       if (err.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       if (err.response?.data?.error) {
         setFormError(err.response.data.error);
       } else if (err.message === "No authentication token found") {
@@ -74,15 +74,15 @@ const NewTask: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
-    
+
     if (!title.trim() || !description.trim()) {
       setFormError("Title and description are required");
       return;
     }
 
-    mutate({ 
-      title: title.trim(), 
-      description: description.trim() 
+    mutate({
+      title: title.trim(),
+      description: description.trim(),
     });
   };
 
@@ -109,9 +109,7 @@ const NewTask: React.FC = () => {
         <Paper elevation={3} sx={{ p: 3 }}>
           <form onSubmit={handleSubmit}>
             <Stack spacing={3}>
-              {formError && (
-                <Alert severity="error">{formError}</Alert>
-              )}
+              {formError && <Alert severity="error">{formError}</Alert>}
 
               <TextField
                 label="Task Title"
@@ -122,7 +120,9 @@ const NewTask: React.FC = () => {
                 placeholder="Enter a title for your task"
                 disabled={isPending}
                 error={!title.trim() && formError !== null}
-                helperText={!title.trim() && formError !== null ? "Title is required" : ""}
+                helperText={
+                  !title.trim() && formError !== null ? "Title is required" : ""
+                }
               />
 
               <TextField
@@ -136,32 +136,33 @@ const NewTask: React.FC = () => {
                 placeholder="Describe your task in detail..."
                 disabled={isPending}
                 error={!description.trim() && formError !== null}
-                helperText={!description.trim() && formError !== null ? "Description is required" : ""}
+                helperText={
+                  !description.trim() && formError !== null
+                    ? "Description is required"
+                    : ""
+                }
               />
-              
-                
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isPending}
-                    size="large"
-                    sx={{ minWidth: 150 }}
-                  >
-                    {isPending ? "Creating..." : "Create Task"}
-                  </Button>
-                
-                  <Button
-                    type="button"
-                    variant="outlined"
-                    size="large"
-                    onClick={handleCancel}
-                    disabled={isPending}
-                    sx={{ minWidth: 100 }}
-                  >
-                    Cancel
-                  </Button>
-                
-              
+
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={isPending}
+                size="large"
+                sx={{ minWidth: 150 }}
+              >
+                {isPending ? "Creating..." : "Create Task"}
+              </Button>
+
+              <Button
+                type="button"
+                variant="outlined"
+                size="large"
+                onClick={handleCancel}
+                disabled={isPending}
+                sx={{ minWidth: 100 }}
+              >
+                Cancel
+              </Button>
             </Stack>
           </form>
         </Paper>

@@ -39,24 +39,27 @@ const CompletedTasks: React.FC = () => {
           return;
         }
 
-        const response = await axios.get<{ tasks: Task[] }>("/api/tasks/completed", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get<{ tasks: Task[] }>(
+          "/api/tasks/completed",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         const tasksData = response.data.tasks || response.data;
         setTasks(Array.isArray(tasksData) ? tasksData : []);
         setError(null);
       } catch (error: any) {
         console.error("Failed to fetch completed tasks:", error);
-        
+
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
           navigate("/login");
           return;
         }
-        
+
         setError("Failed to load completed tasks. Please try again.");
         setTasks([]);
       } finally {
@@ -89,13 +92,13 @@ const CompletedTasks: React.FC = () => {
       setError(null);
     } catch (error: any) {
       console.error("Failed to delete task:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       setError("Failed to delete task. Please try again.");
     }
   };
@@ -134,11 +137,7 @@ const CompletedTasks: React.FC = () => {
             <Typography variant="h5" color="text.secondary">
               No completed tasks yet! 🎯
             </Typography>
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{ mt: 2 }}
-            >
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
               Complete some tasks to see them here.
             </Typography>
           </Box>

@@ -29,7 +29,7 @@ type CardProps = {
   isDeleted: boolean;
   dateCreated: string;
   dateUpdated: string;
-  onTaskUpdate?: () => void; 
+  onTaskUpdate?: () => void;
 };
 
 function Task({
@@ -83,13 +83,13 @@ function Task({
       }
     } catch (error: any) {
       console.error("Failed to delete task:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       alert("Failed to delete task. Please try again.");
     } finally {
       setLoading(false);
@@ -106,14 +106,18 @@ function Task({
       }
 
       const endpoint = isCompleted ? "incomplete" : "complete";
-      await axiosInstance.patch(`/api/tasks/${endpoint}/${id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axiosInstance.patch(
+        `/api/tasks/${endpoint}/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const action = isCompleted ? "incomplete" : "completed";
-      
+
       const successAlert = document.createElement("div");
       successAlert.innerHTML = `Task marked as ${action}!`;
       successAlert.style.cssText = `
@@ -129,13 +133,13 @@ function Task({
       }
     } catch (error: any) {
       console.error("Failed to toggle task completion:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       alert("Failed to update task status. Please try again.");
     } finally {
       setLoading(false);
@@ -151,11 +155,15 @@ function Task({
         return;
       }
 
-      await axiosInstance.patch(`/api/tasks/${id}/restore`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axiosInstance.patch(
+        `/api/tasks/${id}/restore`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const successAlert = document.createElement("div");
       successAlert.innerHTML = "Task restored successfully!";
@@ -172,13 +180,13 @@ function Task({
       }
     } catch (error: any) {
       console.error("Failed to restore task:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       alert("Failed to restore task. Please try again.");
     } finally {
       setLoading(false);
@@ -196,7 +204,11 @@ function Task({
           justifyContent: "space-between",
           height: "100%",
           bgcolor: isCompleted ? "#e8f5e8" : isDeleted ? "#ffebee" : "#fff",
-          border: isCompleted ? "2px solid #4caf50" : isDeleted ? "2px solid #f44336" : "1px solid #e0e0e0",
+          border: isCompleted
+            ? "2px solid #4caf50"
+            : isDeleted
+              ? "2px solid #f44336"
+              : "1px solid #e0e0e0",
           opacity: isDeleted ? 0.8 : 1,
         }}
       >
@@ -205,9 +217,13 @@ function Task({
             variant="h5"
             fontWeight="bold"
             gutterBottom
-            sx={{ 
+            sx={{
               textDecoration: isCompleted ? "line-through" : "none",
-              color: isDeleted ? "#f44336" : isCompleted ? "#4caf50" : "inherit"
+              color: isDeleted
+                ? "#f44336"
+                : isCompleted
+                  ? "#4caf50"
+                  : "inherit",
             }}
           >
             {isCompleted && "✅ "}
@@ -220,12 +236,14 @@ function Task({
               variant="body2"
               color="text.secondary"
               gutterBottom
-              sx={{ 
+              sx={{
                 textDecoration: isCompleted ? "line-through" : "none",
-                minHeight: 60
+                minHeight: 60,
               }}
             >
-              {description.length > 100 ? description.substring(0, 100) + "..." : description}
+              {description.length > 100
+                ? description.substring(0, 100) + "..."
+                : description}
             </Typography>
           </Paper>
           <Divider sx={{ my: 2 }} />
@@ -247,7 +265,7 @@ function Task({
             </Typography>
           )}
         </CardContent>
-        
+
         {isDeleted ? (
           <CardActions sx={{ justifyContent: "center", px: 2, pb: 2 }}>
             <Button
@@ -263,7 +281,15 @@ function Task({
             </Button>
           </CardActions>
         ) : (
-          <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2, flexWrap: "wrap", gap: 1 }}>
+          <CardActions
+            sx={{
+              justifyContent: "space-between",
+              px: 2,
+              pb: 2,
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
             <Button
               size="small"
               variant="outlined"
@@ -285,7 +311,11 @@ function Task({
               disabled={loading}
               sx={{ minWidth: 120 }}
             >
-              {loading ? "Updating..." : isCompleted ? "Mark Incomplete" : "Mark Complete"}
+              {loading
+                ? "Updating..."
+                : isCompleted
+                  ? "Mark Incomplete"
+                  : "Mark Complete"}
             </Button>
 
             <Button

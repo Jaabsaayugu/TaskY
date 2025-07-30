@@ -53,19 +53,19 @@ const UpdateTask: React.FC = () => {
         setError(null);
       } catch (error: any) {
         console.error("Failed to fetch task:", error);
-        
+
         if (error.response?.status === 401) {
           localStorage.removeItem("token");
           navigate("/login");
           return;
         }
-        
+
         if (error.response?.status === 404) {
           setError("Task not found");
         } else {
           setError("Failed to fetch task. Please try again.");
         }
-        
+
         setTimeout(() => navigate("/taskList"), 3000);
       } finally {
         setLoading(false);
@@ -79,7 +79,7 @@ const UpdateTask: React.FC = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!title.trim() || !description.trim()) {
       setError("Title and description are required");
       return;
@@ -92,14 +92,18 @@ const UpdateTask: React.FC = () => {
         return;
       }
 
-      await axios.put(`/api/tasks/${id}`, {
-        title: title.trim(),
-        description: description.trim(),
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.put(
+        `/api/tasks/${id}`,
+        {
+          title: title.trim(),
+          description: description.trim(),
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
       const successAlert = document.createElement("div");
       successAlert.innerHTML = "Task updated successfully!";
@@ -110,17 +114,17 @@ const UpdateTask: React.FC = () => {
       `;
       document.body.appendChild(successAlert);
       setTimeout(() => document.body.removeChild(successAlert), 2000);
-      
+
       setTimeout(() => navigate("/taskList"), 2000);
     } catch (error: any) {
       console.error("Failed to update task:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       setError("Failed to update task. Please try again.");
     }
   };
@@ -136,14 +140,18 @@ const UpdateTask: React.FC = () => {
       }
 
       const endpoint = task.isCompleted ? "incomplete" : "complete";
-      await axios.patch(`/api/tasks/${endpoint}/${id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      await axios.patch(
+        `/api/tasks/${endpoint}/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const action = task.isCompleted ? "incomplete" : "completed";
-      
+
       const successAlert = document.createElement("div");
       successAlert.innerHTML = `Task marked as ${action}!`;
       successAlert.style.cssText = `
@@ -153,24 +161,27 @@ const UpdateTask: React.FC = () => {
       `;
       document.body.appendChild(successAlert);
       setTimeout(() => document.body.removeChild(successAlert), 2000);
-      
+
       setTimeout(() => navigate("/taskList"), 2000);
     } catch (error: any) {
       console.error("Failed to toggle task completion:", error);
-      
+
       if (error.response?.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
-      
+
       setError("Failed to update task status. Please try again.");
     }
   };
 
   if (loading) {
     return (
-      <Container maxWidth="md" sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}>
+      <Container
+        maxWidth="md"
+        sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}
+      >
         <Typography variant="h5" textAlign="center">
           Loading task...
         </Typography>
@@ -181,7 +192,10 @@ const UpdateTask: React.FC = () => {
   if (!task) {
     return (
       <>
-        <Container maxWidth="md" sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}>
+        <Container
+          maxWidth="md"
+          sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}
+        >
           <Typography variant="h5" textAlign="center" color="error">
             {error || "Task not found"}
           </Typography>
@@ -196,7 +210,10 @@ const UpdateTask: React.FC = () => {
 
   return (
     <>
-      <Container maxWidth="md" sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}>
+      <Container
+        maxWidth="md"
+        sx={{ bgcolor: "#fffbe6", p: 3, minHeight: "80vh" }}
+      >
         <Typography variant="h4" fontWeight="bold" color="primary" gutterBottom>
           Update Task
         </Typography>
@@ -217,7 +234,9 @@ const UpdateTask: React.FC = () => {
                 required
                 fullWidth
                 error={!title.trim() && error !== null}
-                helperText={!title.trim() && error !== null ? "Title is required" : ""}
+                helperText={
+                  !title.trim() && error !== null ? "Title is required" : ""
+                }
               />
 
               <TextField
@@ -229,7 +248,11 @@ const UpdateTask: React.FC = () => {
                 required
                 fullWidth
                 error={!description.trim() && error !== null}
-                helperText={!description.trim() && error !== null ? "Description is required" : ""}
+                helperText={
+                  !description.trim() && error !== null
+                    ? "Description is required"
+                    : ""
+                }
               />
 
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>

@@ -33,16 +33,20 @@ function TaskList() {
         throw new Error("No authentication token found");
       }
 
-      const response = await axiosInstance.get<{ tasks: TaskType[] } | TaskType[]>("/api/tasks", {
+      const response = await axiosInstance.get<
+        { tasks: TaskType[] } | TaskType[]
+      >("/api/tasks", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      
+
       console.log("Raw response from /api/tasks:", response.data);
-      
-      const tasks = Array.isArray(response.data) ? response.data : response.data.tasks || [];
-      
+
+      const tasks = Array.isArray(response.data)
+        ? response.data
+        : response.data.tasks || [];
+
       return tasks.filter((task: TaskType) => !task.isDeleted);
     },
     retry: (failureCount, error: any) => {
@@ -69,10 +73,11 @@ function TaskList() {
             </Alert>
             <Stack component="section" p={7} alignItems="center">
               <Typography variant="h4" textAlign="center" fontWeight="bold">
-                Something went wrong! 
+                Something went wrong!
               </Typography>
               <Typography variant="body1" textAlign="center" sx={{ mt: 2 }}>
-                {(error as any)?.message || "Please refresh the page or try again later."}
+                {(error as any)?.message ||
+                  "Please refresh the page or try again later."}
               </Typography>
             </Stack>
           </Container>
@@ -91,10 +96,16 @@ function TaskList() {
       <Box component="main" flex="1" bgcolor="antiquewhite">
         <Container maxWidth={false} sx={{ minHeight: "100vh" }}>
           <Box mt={2}>
-            <Typography variant="h4" fontWeight="bold" color="primary" textAlign="center" sx={{ mb: 3 }}>
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              color="primary"
+              textAlign="center"
+              sx={{ mb: 3 }}
+            >
               My Tasks ({data.length})
             </Typography>
-            
+
             <Grid container justifyContent="center" spacing={4} mt={3} px={5}>
               {Array.isArray(data) && data.length > 0 ? (
                 data.map((task: TaskType) => (
@@ -107,16 +118,20 @@ function TaskList() {
                     isDeleted={task.isDeleted}
                     dateCreated={task.dateCreated}
                     dateUpdated={task.dateUpdated}
-                    onTaskUpdate={refetch} 
+                    onTaskUpdate={refetch}
                   />
                 ))
               ) : (
-                <Box >
+                <Box>
                   <Box sx={{ textAlign: "center", mt: 8 }}>
                     <Typography variant="h5" color="text.secondary">
                       No tasks found. Create your first task! 🚀
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+                    <Typography
+                      variant="body1"
+                      color="text.secondary"
+                      sx={{ mt: 2 }}
+                    >
                       Click "New Task" to get started.
                     </Typography>
                   </Box>

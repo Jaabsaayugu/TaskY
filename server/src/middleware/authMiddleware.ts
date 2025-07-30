@@ -4,7 +4,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "gskuhiasuiauscgiugiaucgiuasgciasic";
+const JWT_SECRET =
+  process.env.JWT_SECRET || "gskuhiasuiauscgiugiaucgiuasgciasic";
 
 interface JwtPayload {
   id: string;
@@ -23,9 +24,9 @@ export default function authenticateToken(
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ 
+    res.status(401).json({
       error: "Access token required",
-      message: "No authentication token provided" 
+      message: "No authentication token provided",
     });
     return;
   }
@@ -36,21 +37,21 @@ export default function authenticateToken(
     next();
   } catch (error) {
     console.error("JWT verification error:", error);
-    
+
     if (error instanceof jwt.TokenExpiredError) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: "Token expired",
-        message: "Your session has expired. Please log in again." 
+        message: "Your session has expired. Please log in again.",
       });
     } else if (error instanceof jwt.JsonWebTokenError) {
-      res.status(401).json({ 
+      res.status(401).json({
         error: "Invalid token",
-        message: "Invalid authentication token" 
+        message: "Invalid authentication token",
       });
     } else {
-      res.status(403).json({ 
+      res.status(403).json({
         error: "Token verification failed",
-        message: "Authentication failed" 
+        message: "Authentication failed",
       });
     }
     return;

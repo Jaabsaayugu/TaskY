@@ -63,8 +63,8 @@ dotenv.config();
 
 const app = express();
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 
 const allowedOrigins = [
@@ -76,7 +76,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-      
+
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -87,32 +87,38 @@ app.use(
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     credentials: true,
-    optionsSuccessStatus: 200, 
+    optionsSuccessStatus: 200,
   }),
 );
 
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,PATCH');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  res.header('Access-Control-Allow-Credentials', 'true');
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,OPTIONS,PATCH",
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With",
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
   res.sendStatus(200);
 });
 
 app.get("/", (_req, res) => {
-  res.json({ 
+  res.json({
     message: "Task-Y API Server",
     status: "running",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
 app.get("/api/health", (_req, res) => {
-  res.json({ 
-    status: "OK", 
+  res.json({
+    status: "OK",
     message: "API is running",
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
@@ -120,23 +126,33 @@ app.use("/api/auth", authRouter);
 app.use("/api/tasks", taskRouter);
 app.use("/api/user", userRouter);
 
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Global error handler:', err);
-  
-  if (err.message === "Not allowed by CORS") {
-    return res.status(403).json({ 
-      error: "CORS Error", 
-      message: "Origin not allowed" 
-    });
-  }
-  
-  res.status(err.status || 500).json({
-    error: "Internal Server Error",
-    message: process.env.NODE_ENV === 'development' ? err.message : "Something went wrong",
-  });
-});
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction,
+  ) => {
+    console.error("Global error handler:", err);
 
-app.use('*', (req, res) => {
+    if (err.message === "Not allowed by CORS") {
+      return res.status(403).json({
+        error: "CORS Error",
+        message: "Origin not allowed",
+      });
+    }
+
+    res.status(err.status || 500).json({
+      error: "Internal Server Error",
+      message:
+        process.env.NODE_ENV === "development"
+          ? err.message
+          : "Something went wrong",
+    });
+  },
+);
+
+app.use("*", (req, res) => {
   res.status(404).json({
     error: "Not Found",
     message: `Route ${req.method} ${req.originalUrl} not found`,
@@ -146,6 +162,6 @@ app.use('*', (req, res) => {
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`🚀 Task-Y API server is running on port ${port}`);
-  console.log(`📱 Allowed origins: ${allowedOrigins.join(', ')}`);
-  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📱 Allowed origins: ${allowedOrigins.join(", ")}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || "development"}`);
 });
