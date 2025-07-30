@@ -1,11 +1,11 @@
-import { useState,  } from 'react';
-import type { ReactNode } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import type { ReactNode } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
   Typography,
-//   Button,
+  //   Button,
   Box,
   Drawer,
   List,
@@ -19,7 +19,7 @@ import {
   IconButton,
   useTheme,
   useMediaQuery,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Menu as MenuIcon,
   Task,
@@ -28,9 +28,9 @@ import {
   Delete,
   Person,
   Logout,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 // import type  { User } from '../types';
-import { getUser, logout, getUserInitials } from './lib/auth';
+import { getUser, logout, getUserInitials } from "./lib/auth";
 
 //  interface User {
 //   firstName?: string;
@@ -50,17 +50,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const user = getUser();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
- const handleProfileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-  setAnchorEl(event.currentTarget);
-};
+  const handleProfileMenuOpen = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
@@ -72,11 +74,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const menuItems = [
-    { text: 'Tasks', icon: <Task />, path: '/taskList' },
-    { text: 'New Task', icon: <Add />, path: '/newTask' },
-    { text: 'Completed Tasks', icon: <CheckCircle />, path: '/completedTasks' },
-    { text: 'Trash', icon: <Delete />, path: '/trash' },
-    { text: 'Profile', icon: <Person />, path: '/profile' },
+    { text: "Tasks", icon: <Task />, path: "/taskList" },
+    { text: "New Task", icon: <Add />, path: "/newTask" },
+    { text: "Completed Tasks", icon: <CheckCircle />, path: "/completedTasks" },
+    { text: "Trash", icon: <Delete />, path: "/trash" },
+    { text: "Profile", icon: <Person />, path: "/profile" },
   ];
 
   const drawer = (
@@ -86,25 +88,25 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           Tasky
         </Typography> */}
         <Link to="/" style={{ textDecoration: "none" }}>
-                  <Typography
-                    variant="h2"
-                    component="h1"
-                    fontFamily="sans-serif"
-                    fontWeight={900}
-                    color="inherit"
-                  >
-                    📒Task
-                    <Typography
-                      variant="h2"
-                      component="span"
-                      fontFamily="sans-serif"
-                      fontWeight={900}
-                      color="warning.light"
-                    >
-                      Y
-                    </Typography>
-                  </Typography>
-                </Link>
+          <Typography
+            variant="h2"
+            component="h1"
+            fontFamily="sans-serif"
+            fontWeight={900}
+            color="inherit"
+          >
+            📒Task
+            <Typography
+              variant="h2"
+              component="span"
+              fontFamily="sans-serif"
+              fontWeight={900}
+              color="warning.light"
+            >
+              Y
+            </Typography>
+          </Typography>
+        </Link>
       </Toolbar>
       <List>
         {menuItems.map((item) => (
@@ -125,7 +127,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <AppBar
         position="fixed"
         sx={{
@@ -139,7 +141,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }}
+            sx={{ mr: 2, display: { md: "none" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -155,11 +157,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <Avatar
-              src={user?.avatar}
-              sx={{ width: 32, height: 32 }}
-            >
-              {getUserInitials(user )}
+            <Avatar src={user?.avatar} sx={{ width: 32, height: 32 }}>
+              {getUserInitials(user)}
             </Avatar>
           </IconButton>
           <Menu
@@ -168,7 +167,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             open={Boolean(anchorEl)}
             onClose={handleProfileMenuClose}
           >
-            <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/profile'); }}>
+            <MenuItem
+              onClick={() => {
+                handleProfileMenuClose();
+                navigate("/profile");
+              }}
+            >
               <Person sx={{ mr: 1 }} />
               Profile
             </MenuItem>
@@ -191,8 +195,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             keepMounted: true,
           }}
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
           }}
         >
           {drawer}
@@ -200,8 +207,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            display: { xs: "none", md: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
           }}
           open
         >
@@ -224,4 +234,3 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 };
 
 export default Layout;
-

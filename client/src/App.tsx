@@ -38,11 +38,46 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/taskList" element={<Layout><TasksList /></Layout>} />
-        <Route path="/newTask" element={<Layout><NewTask /></Layout>} />
-        <Route path="/profile" element={<Layout><Profile /></Layout>} />
-        <Route path="/completedTasks" element={<Layout><CompletedTasks /></Layout>} />
-        <Route path="/trash" element={<Layout><Trash /></Layout>} />
+        <Route
+          path="/taskList"
+          element={
+            <Layout>
+              <TasksList />
+            </Layout>
+          }
+        />
+        <Route
+          path="/newTask"
+          element={
+            <Layout>
+              <NewTask />
+            </Layout>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <Layout>
+              <Profile />
+            </Layout>
+          }
+        />
+        <Route
+          path="/completedTasks"
+          element={
+            <Layout>
+              <CompletedTasks />
+            </Layout>
+          }
+        />
+        <Route
+          path="/trash"
+          element={
+            <Layout>
+              <Trash />
+            </Layout>
+          }
+        />
       </Routes>
     </Router>
   );

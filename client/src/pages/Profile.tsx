@@ -9,25 +9,25 @@ import {
   Button,
   // Drawer,
   // CssBaseline,
-  List,
+  // List,
   // ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
-  Toolbar,
+  // ListItemButton,
+  // ListItemIcon,
+  // ListItemText,
+  // IconButton,
+  // Toolbar,
   // AppBar,
   Divider,
 } from "@mui/material";
-import {
-  // Inbox as InboxIcon,
-  Delete as DeleteIcon,
-  Add as AddIcon,
-  Logout as LogoutIcon,
-  // Assignment as TaskIcon,
-  AccountCircle,
-  Menu as MenuIcon,
-} from "@mui/icons-material";
+// import {
+//   // Inbox as InboxIcon,
+//   Delete as DeleteIcon,
+//   Add as AddIcon,
+//   Logout as LogoutIcon,
+//   // Assignment as TaskIcon,
+//   AccountCircle,
+//   Menu as MenuIcon,
+// } from "@mui/icons-material";
 import axios from "../api/axios";
 import useUser from "../store/userStore";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +52,7 @@ const Profile: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  // const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -69,59 +69,59 @@ const Profile: React.FC = () => {
       .catch((err) => console.error("Failed to fetch user tasks", err));
   }, []);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  // const handleDrawerToggle = () => {
+  //   setMobileOpen(!mobileOpen);
+  // };
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <IconButton
-        color="inherit"
-        edge="start"
-        onClick={handleDrawerToggle}
-        sx={{ ml: 2, m: 4 }}
-      >
-        <MenuIcon />
-        <Typography variant="h6" noWrap color="navy">
-          Dashboard
-        </Typography>
-      </IconButton>
+  // const drawer = (
+  //   <div>
+  //     <Toolbar />
+  //     <Divider />
+  //     <IconButton
+  //       color="inherit"
+  //       edge="start"
+  //       onClick={handleDrawerToggle}
+  //       sx={{ ml: 2, m: 4 }}
+  //     >
+  //       <MenuIcon />
+  //       <Typography variant="h6" noWrap color="navy">
+  //         Dashboard
+  //       </Typography>
+  //     </IconButton>
 
-      <List>
-        <ListItemButton onClick={() => navigate("/newTask")}>
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText primary="New Task" />
-        </ListItemButton>
-        <ListItemButton onClick={() => navigate("/trash")}>
-          <ListItemIcon>
-            <DeleteIcon />
-          </ListItemIcon>
-          <ListItemText primary="Trash" />
-        </ListItemButton>
-        <ListItemButton onClick={() => navigate("/profile")}>
-          <ListItemIcon>
-            <AccountCircle />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </ListItemButton>
-        <ListItemButton
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/login");
-          }}
-        >
-          <ListItemIcon>
-            <LogoutIcon />
-          </ListItemIcon>
-          <ListItemText primary="Logout" />
-        </ListItemButton>
-      </List>
-    </div>
-  );
+  //     <List>
+  //       <ListItemButton onClick={() => navigate("/newTask")}>
+  //         <ListItemIcon>
+  //           <AddIcon />
+  //         </ListItemIcon>
+  //         <ListItemText primary="New Task" />
+  //       </ListItemButton>
+  //       <ListItemButton onClick={() => navigate("/trash")}>
+  //         <ListItemIcon>
+  //           <DeleteIcon />
+  //         </ListItemIcon>
+  //         <ListItemText primary="Trash" />
+  //       </ListItemButton>
+  //       <ListItemButton onClick={() => navigate("/profile")}>
+  //         <ListItemIcon>
+  //           <AccountCircle />
+  //         </ListItemIcon>
+  //         <ListItemText primary="Profile" />
+  //       </ListItemButton>
+  //       <ListItemButton
+  //         onClick={() => {
+  //           localStorage.removeItem("token");
+  //           navigate("/login");
+  //         }}
+  //       >
+  //         <ListItemIcon>
+  //           <LogoutIcon />
+  //         </ListItemIcon>
+  //         <ListItemText primary="Logout" />
+  //       </ListItemButton>
+  //     </List>
+  //   </div>
+  // );
 
   const handleUserUpdate = async () => {
     try {
@@ -156,11 +156,9 @@ const Profile: React.FC = () => {
     }
   };
 
-  
-
   return (
     <Box sx={{ backgroundColor: "#fdfdfd", minHeight: "100vh", py: 4 }}>
-      <Container maxWidth="md" sx={{mb: 5}}>
+      <Container maxWidth="md" sx={{ mb: 5 }}>
         <Typography variant="h3" fontWeight={700} gutterBottom>
           Your Profile
         </Typography>

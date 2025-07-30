@@ -14,23 +14,23 @@ export const createTask = async (req: Request, res: Response) => {
     const newTask = await client.task.create({
       data: { title, description, userId: id },
     });
-    res.status(201).json({message: "New Task Created Successfully!"});
+    res.status(201).json({ message: "New Task Created Successfully!" });
   } catch (e) {
     res.status(500).json({ message: "Something went Wrong Try again Later!" });
   }
 };
 
-export const getTasks = async ( req:Request, res: Response) => {
+export const getTasks = async (req: Request, res: Response) => {
   try {
     if (!req.user) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     const { id } = req.user;
     const tasks = await client.task.findMany({
-      where: { userId: id }
-    })
+      where: { userId: id },
+    });
     res.status(200).json(tasks);
-  }catch(e) {
-    res.status(500).json({ message: "something went Wrong! "})
+  } catch (e) {
+    res.status(500).json({ message: "something went Wrong! " });
   }
-}
+};

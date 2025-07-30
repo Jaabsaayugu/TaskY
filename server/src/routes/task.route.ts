@@ -67,7 +67,7 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 });
 
 router.post("/", verifyUser, createTask);
-router.get("/", verifyUser, getTasks)
+router.get("/", verifyUser, getTasks);
 
 // router.post("/", verifyToken, async (req: Request, res: Response) => {
 //   const { title, description } = req.body;
