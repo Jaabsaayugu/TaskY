@@ -5,12 +5,12 @@ import useUser from "./store/userStore";
 
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Authentication";
-// import Header from "./components/Header";
 import TasksList from "./pages/TasksList";
 import NewTask from "./pages/NewTask";
 import Profile from "./pages/Profile";
 import CompletedTasks from "./pages/CompletedTasks";
 import Trash from "./pages/Trash";
+import UpdateTask from "./pages/UpdateTask"; 
 import Layout from "./components/layout";
 
 function App() {
@@ -27,14 +27,15 @@ function App() {
           const data = res.data as { user: any };
           setUser(data.user);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error("Failed to authenticate user:", error);
           localStorage.removeItem("token");
         });
     }
-  }, []);
+  }, [setUser]);
+
   return (
     <Router>
-      {/* <Header /> */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -75,6 +76,14 @@ function App() {
           element={
             <Layout>
               <Trash />
+            </Layout>
+          }
+        />
+        <Route
+          path="/tasks/update/:id"
+          element={
+            <Layout>
+              <UpdateTask />
             </Layout>
           }
         />

@@ -1,39 +1,3 @@
-// import { PrismaClient } from "@prisma/client";
-// import { Request, Response } from "express";
-// const client = new PrismaClient();
-
-// interface JwtPayload {
-//   id: string;
-//   email: string;
-// }
-
-// export const createTask = async (req: Request, res: Response) => {
-//   try {
-//     const { title, description } = req.body;
-//     const { id } = req.user as JwtPayload;
-//     const newTask = await client.task.create({
-//       data: { title, description, userId: id },
-//     });
-//     res.status(201).json({ message: "New Task Created Successfully!" });
-//   } catch (e) {
-//     res.status(500).json({ message: "Something went Wrong Try again Later!" });
-//   }
-// };
-
-// export const getTasks = async (req: Request, res: Response) => {
-//   try {
-//     if (!req.user) {
-//       return res.status(401).json({ message: "Unauthorized" });
-//     }
-//     const { id } = req.user;
-//     const tasks = await client.task.findMany({
-//       where: { userId: id },
-//     });
-//     res.status(200).json(tasks);
-//   } catch (e) {
-//     res.status(500).json({ message: "something went Wrong! " });
-//   }
-// };
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { CreateTaskData, UpdateTaskData } from "../types/express/index";
@@ -95,7 +59,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
       },
     });
 
-    res.json({ tasks });
+    res.json(tasks);
   } catch (error) {
     console.error("Get tasks error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -116,6 +80,7 @@ export const getTask = async (req: Request, res: Response): Promise<void> => {
       where: {
         id,
         userId,
+        isDeleted: false, 
       },
     });
 
@@ -124,7 +89,7 @@ export const getTask = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.json({ task });
+    res.json(task);
   } catch (error) {
     console.error("Get task error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -145,11 +110,11 @@ export const updateTask = async (
       return;
     }
 
-    // Check if task exists and belongs to user
     const existingTask = await prisma.task.findFirst({
       where: {
         id,
         userId,
+        isDeleted: false,
       },
     });
 
@@ -208,11 +173,11 @@ export const deleteTask = async (
       return;
     }
 
-    // Check if task exists and belongs to user
     const existingTask = await prisma.task.findFirst({
       where: {
         id,
         userId,
+        isDeleted: false,
       },
     });
 
@@ -223,10 +188,13 @@ export const deleteTask = async (
 
     await prisma.task.update({
       where: { id },
-      data: { isDeleted: true },
+      data: { 
+        isDeleted: true,
+        dateUpdated: new Date(), 
+      },
     });
 
-    res.json({ message: "Task deleted successfully" });
+    res.json({ message: "Task moved to trash successfully" });
   } catch (error) {
     console.error("Delete task error:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -246,22 +214,25 @@ export const restoreTask = async (
       return;
     }
 
-    // Check if task exists and belongs to user
     const existingTask = await prisma.task.findFirst({
       where: {
         id,
         userId,
+        isDeleted: true,
       },
     });
 
     if (!existingTask) {
-      res.status(404).json({ error: "Task not found" });
+      res.status(404).json({ error: "Task not found in trash" });
       return;
     }
 
     const restoredTask = await prisma.task.update({
       where: { id },
-      data: { isDeleted: false },
+      data: { 
+        isDeleted: false,
+        dateUpdated: new Date(), 
+      },
     });
 
     res.json({
@@ -287,11 +258,11 @@ export const completeTask = async (
       return;
     }
 
-    // Check if task exists and belongs to user
     const existingTask = await prisma.task.findFirst({
       where: {
         id,
         userId,
+        isDeleted: false,
       },
     });
 
@@ -302,7 +273,10 @@ export const completeTask = async (
 
     const completedTask = await prisma.task.update({
       where: { id },
-      data: { isCompleted: true },
+      data: { 
+        isCompleted: true,
+        dateUpdated: new Date(),
+      },
     });
 
     res.json({
@@ -328,11 +302,11 @@ export const incompleteTask = async (
       return;
     }
 
-    // Check if task exists and belongs to user
     const existingTask = await prisma.task.findFirst({
       where: {
         id,
         userId,
+        isDeleted: false,
       },
     });
 
@@ -343,7 +317,10 @@ export const incompleteTask = async (
 
     const incompleteTask = await prisma.task.update({
       where: { id },
-      data: { isCompleted: false },
+      data: { 
+        isCompleted: false,
+        dateUpdated: new Date(),
+      },
     });
 
     res.json({

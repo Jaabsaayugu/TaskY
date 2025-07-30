@@ -11,6 +11,7 @@ import {
   Alert,
 } from "@mui/material";
 import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 import Footer from "../components/footer";
 
 interface Task {
@@ -26,23 +27,46 @@ interface Task {
 const Trash: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDeletedTasks = async () => {
       try {
-        const response = await axios.get("/api/tasks/deleted");
-        const data = response.data;
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/login");
+          return;
+        }
 
-        console.log("Fetched deleted tasks:", data);
+        const response = await axios.get<{ tasks: Task[] }>("/api/tasks/deleted", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        if (Array.isArray(data)) {
-          setTasks(data);
+        console.log("Fetched deleted tasks:", response.data);
+
+        const tasksData = response.data.tasks || response.data;
+        
+        if (Array.isArray(tasksData)) {
+          setTasks(tasksData);
         } else {
-          console.warn("Expected an array but got:", data);
+          console.warn("Expected an array but got:", tasksData);
           setTasks([]);
         }
-      } catch (error) {
+        
+        setError(null);
+      } catch (error: any) {
         console.error("Failed to fetch deleted tasks:", error);
+        
+        if (error.response?.status === 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
+          return;
+        }
+        
+        setError("Failed to load deleted tasks. Please try again.");
         setTasks([]);
       } finally {
         setLoading(false);
@@ -50,16 +74,45 @@ const Trash: React.FC = () => {
     };
 
     fetchDeletedTasks();
-  }, []);
+  }, [navigate]);
 
   const handleRestore = async (taskId: string) => {
     try {
-      await axios.patch(`/api/tasks/restore/${taskId}`);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      await axios.patch(`/api/tasks/${taskId}/restore`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       setTasks((prev) => prev.filter((task) => task.id !== taskId));
-      alert("Task restored successfully");
-    } catch (error) {
+      setError(null);
+      
+      const successAlert = document.createElement("div");
+      successAlert.innerHTML = "Task restored successfully!";
+      successAlert.style.cssText = `
+        position: fixed; top: 20px; right: 20px; z-index: 9999;
+        background: #4caf50; color: white; padding: 12px 24px;
+        border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      `;
+      document.body.appendChild(successAlert);
+      setTimeout(() => document.body.removeChild(successAlert), 3000);
+      
+    } catch (error: any) {
       console.error("Failed to restore task:", error);
-      alert("Failed to restore task");
+      
+      if (error.response?.status === 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+        return;
+      }
+      
+      setError("Failed to restore task. Please try again.");
     }
   };
 
@@ -89,6 +142,12 @@ const Trash: React.FC = () => {
         <Alert severity="info" sx={{ mb: 3 }}>
           Items in trash will be deleted after 30 days
         </Alert>
+
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
 
         {tasks.length === 0 ? (
           <Box sx={{ textAlign: "center", mt: 8 }}>
