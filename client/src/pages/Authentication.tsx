@@ -11,6 +11,7 @@ import {
   Tabs,
   Divider,
   Tab,
+  Alert,
   Checkbox,
   FormControlLabel,
   Link,
@@ -34,6 +35,7 @@ const Login: React.FC = () => {
   const { setUser } = useUser();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -71,7 +73,14 @@ const Login: React.FC = () => {
       );
 
       console.log("User registered:", response.data);
-      alert("Registration successful!");
+      {
+        successMessage && (
+          <Alert severity="success" sx={{ mb: 3 }}>
+            {successMessage}
+          </Alert>
+        );
+      }
+
       setTab(1);
     } catch (err: any) {
       console.error("Registration failed:", err.response?.data || err.message);
@@ -103,7 +112,10 @@ const Login: React.FC = () => {
       setUser(user);
       navigate("/taskList");
 
-      alert("Login successful!");
+      onSuccess: () => {
+        setSuccessMessage("Login successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+      };
     } catch (err: any) {
       console.error("Login failed:", err.response?.data || err.message);
       alert("Login failed. " + (err.response?.data?.message || err.message));

@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
+const JWT_SECRET =
+  process.env.JWT_SECRET || "your-secret-key-change-in-production";
+
 dotenv.config();
 
 interface JwtPayload {
@@ -30,3 +33,7 @@ export default function authenticateToken(
     return res.status(403).json({ message: "Invalid or expired token" });
   }
 }
+
+export const generateToken = (payload: JwtPayload): string => {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
+};

@@ -10,15 +10,14 @@ import Header from "../components/Header";
 
 function LandingPage() {
   return (
-    <>
-      {/* Background Section */}
-      <Header/>
+    <Container maxWidth={false}>
+      <Header />
       <Stack
         sx={{
           backgroundImage:
             "url('https://images.pexels.com/photos/4348401/pexels-photo-4348401.jpeg')",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "fixed",
           backgroundColor: "rgba(0, 0, 0, 0.4)",
           height: "100vh",
           width: "100vw",
@@ -215,7 +214,7 @@ function LandingPage() {
           </Paper>
         </Box>
       </Stack>
-    </>
+    </Container>
   );
 }
 

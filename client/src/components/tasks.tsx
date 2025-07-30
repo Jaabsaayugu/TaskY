@@ -7,13 +7,15 @@ import {
   Button,
   Grid,
   Divider,
+  Paper,
 } from "@mui/material";
 
-// import { FaRegClock } from "react-icons/fa";
+import { FaRegClock } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { FaTrashRestore } from "react-icons/fa";
+import { MdDoneOutline } from "react-icons/md";
 
 type CardProps = {
   id: string;
@@ -50,23 +52,26 @@ function Task({
           >
             {title}
           </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            gutterBottom
-            sx={{ textDecoration: isCompleted ? "line-through" : "none" }}
-          >
-            {description}
-          </Typography>
           <Divider sx={{ my: 2 }} />
-          <Stack direction="row" spacing={1} alignItems="center" mb={1}>
+          <Paper sx={{ backgroundColor: "antiquewhite" }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              gutterBottom
+              sx={{ textDecoration: isCompleted ? "line-through" : "none" }}
+            >
+              {description}
+            </Typography>
+          </Paper>
+          <Divider sx={{ my: 2 }} />
+          <Stack direction="row" spacing={1} alignItems="center" mb={1} mt={8}>
             <FaCalendarAlt />
             <Typography variant="body2" fontWeight={600}>
               DeadLine
             </Typography>
           </Stack>
           <Stack direction="row" spacing={1} alignItems="center" mb={1}>
-            <FaCalendarAlt />
+            <FaRegClock />
             <Typography variant="body2" fontWeight={600}>
               DeadLineTime
             </Typography>
@@ -91,8 +96,18 @@ function Task({
               color="primary"
               startIcon={<FaEdit />}
             >
-              Update
+              Edit
             </Button>
+
+            <Button
+              size="small"
+              variant="contained"
+              color="primary"
+              startIcon={<MdDoneOutline />}
+            >
+              Mark as Completed
+            </Button>
+
             <Button
               size="small"
               variant="outlined"

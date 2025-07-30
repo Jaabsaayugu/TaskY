@@ -31,6 +31,7 @@ import {
 } from "@mui/icons-material";
 // import type  { User } from '../types';
 import { getUser, logout, getUserInitials } from "./lib/auth";
+// import  type { User } from "../types";
 
 //  interface User {
 //   firstName?: string;
@@ -130,6 +131,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <Box sx={{ display: "flex" }}>
       <AppBar
         position="fixed"
+        color="secondary"
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
@@ -146,7 +148,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Welcome, {user?.firstName}
+            Welcome, {user?.firstName || "Guest"}
           </Typography>
           <IconButton
             size="large"

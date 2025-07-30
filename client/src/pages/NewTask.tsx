@@ -7,6 +7,7 @@ import {
   Stack,
   Paper,
   Alert,
+  Grid,
 } from "@mui/material";
 import axiosInstance from "../api/axios";
 // import axios from "axios";
@@ -78,7 +79,7 @@ const NewTask: React.FC = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 required
                 fullWidth
-                placeholder="Enter a descriptive title for your task"
+                placeholder="Enter a  title for your task"
               />
 
               <TextField
@@ -91,16 +92,26 @@ const NewTask: React.FC = () => {
                 fullWidth
                 placeholder="Describe your task in detail..."
               />
+              <Grid container spacing={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={isPending}
+                  size="large"
+                  sx={{ width: "fit-content" }}
+                >
+                  {isPending ? "Creating..." : "Create Task"}
+                </Button>
 
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isPending}
-                size="large"
-                sx={{ width: "fit-content" }}
-              >
-                {isPending ? "Creating..." : "Create Task"}
-              </Button>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  size="large"
+                  sx={{ width: "fit-content" }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
             </Stack>
           </form>
         </Paper>

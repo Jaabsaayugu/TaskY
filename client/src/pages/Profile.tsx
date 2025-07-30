@@ -6,33 +6,18 @@ import {
   Paper,
   TextField,
   Stack,
+  Avatar,
   Button,
-  // Drawer,
-  // CssBaseline,
-  // List,
-  // ListItem,
-  // ListItemButton,
-  // ListItemIcon,
-  // ListItemText,
-  // IconButton,
-  // Toolbar,
-  // AppBar,
   Divider,
 } from "@mui/material";
-// import {
-//   // Inbox as InboxIcon,
-//   Delete as DeleteIcon,
-//   Add as AddIcon,
-//   Logout as LogoutIcon,
-//   // Assignment as TaskIcon,
-//   AccountCircle,
-//   Menu as MenuIcon,
-// } from "@mui/icons-material";
+import { PhotoCamera, Logout } from "@mui/icons-material";
+
 import axios from "../api/axios";
 import useUser from "../store/userStore";
 import { useNavigate } from "react-router-dom";
 import type { User } from "../types";
 import Footer from "../components/footer";
+import { getUserInitials } from "../components/lib/auth";
 
 interface Task {
   id: string;
@@ -42,8 +27,18 @@ interface Task {
   isCompleted: boolean;
 }
 
+type MinimalUser = Pick<
+  User,
+  "firstName" | "lastName" | "username" | "email" | "avatar"
+>;
+
 const Profile: React.FC = () => {
-  const { user, setUser, logoutUser } = useUser();
+  const { user, setUser, logoutUser } = useUser() as {
+    user: MinimalUser | null;
+    setUser: (user: MinimalUser | null) => void;
+    logoutUser: () => void;
+  };
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
@@ -69,60 +64,6 @@ const Profile: React.FC = () => {
       .catch((err) => console.error("Failed to fetch user tasks", err));
   }, []);
 
-  // const handleDrawerToggle = () => {
-  //   setMobileOpen(!mobileOpen);
-  // };
-
-  // const drawer = (
-  //   <div>
-  //     <Toolbar />
-  //     <Divider />
-  //     <IconButton
-  //       color="inherit"
-  //       edge="start"
-  //       onClick={handleDrawerToggle}
-  //       sx={{ ml: 2, m: 4 }}
-  //     >
-  //       <MenuIcon />
-  //       <Typography variant="h6" noWrap color="navy">
-  //         Dashboard
-  //       </Typography>
-  //     </IconButton>
-
-  //     <List>
-  //       <ListItemButton onClick={() => navigate("/newTask")}>
-  //         <ListItemIcon>
-  //           <AddIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary="New Task" />
-  //       </ListItemButton>
-  //       <ListItemButton onClick={() => navigate("/trash")}>
-  //         <ListItemIcon>
-  //           <DeleteIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary="Trash" />
-  //       </ListItemButton>
-  //       <ListItemButton onClick={() => navigate("/profile")}>
-  //         <ListItemIcon>
-  //           <AccountCircle />
-  //         </ListItemIcon>
-  //         <ListItemText primary="Profile" />
-  //       </ListItemButton>
-  //       <ListItemButton
-  //         onClick={() => {
-  //           localStorage.removeItem("token");
-  //           navigate("/login");
-  //         }}
-  //       >
-  //         <ListItemIcon>
-  //           <LogoutIcon />
-  //         </ListItemIcon>
-  //         <ListItemText primary="Logout" />
-  //       </ListItemButton>
-  //     </List>
-  //   </div>
-  // );
-
   const handleUserUpdate = async () => {
     try {
       const res = await axios.patch(
@@ -136,6 +77,27 @@ const Profile: React.FC = () => {
       alert("Profile updated");
     } catch {
       alert("Failed to update user info");
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      const res = await axios.patch("/api/user/avatar", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setUser(res.data as User);
+      alert("Avatar updated");
+    } catch {
+      alert("Failed to upload avatar");
     }
   };
 
@@ -160,11 +122,10 @@ const Profile: React.FC = () => {
     <Box sx={{ backgroundColor: "#fdfdfd", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="md" sx={{ mb: 5 }}>
         <Typography variant="h3" fontWeight={700} gutterBottom>
-          Your Profile
+          {firstName}'s Profile
         </Typography>
         <Divider sx={{ my: 2 }} />
 
-        {/* === Task List === */}
         <Typography variant="h4" color="primary" gutterBottom>
           Your Tasks
         </Typography>
@@ -187,8 +148,10 @@ const Profile: React.FC = () => {
 
         <Divider sx={{ my: 4 }} />
 
-        {/* === Update Info === */}
-        <Paper elevation={4} sx={{ p: 3, borderRadius: 3 }}>
+        <Paper
+          elevation={4}
+          sx={{ p: 3, borderRadius: 3, backgroundColor: "antiquewhite" }}
+        >
           <Typography variant="h5" color="secondary" gutterBottom>
             Update Info
           </Typography>
@@ -221,8 +184,58 @@ const Profile: React.FC = () => {
 
         <Divider sx={{ my: 4 }} />
 
-        {/* === Change Password === */}
-        <Paper elevation={4} sx={{ p: 3, borderRadius: 3 }}>
+        <Paper
+          elevation={3}
+          sx={{
+            p: 4,
+            mb: 4,
+            textAlign: "center",
+            backgroundColor: "antiquewhite",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Profile Picture
+          </Typography>
+
+          <Avatar
+            src={user?.avatar}
+            sx={{
+              width: 120,
+              height: 120,
+              mx: "auto",
+              mb: 2,
+              fontSize: "2rem",
+            }}
+          >
+            {getUserInitials(user as any)}
+          </Avatar>
+
+          <input
+            accept="image/*"
+            style={{ display: "none" }}
+            id="avatar-upload"
+            type="file"
+            onChange={handleAvatarUpload}
+          />
+          <label htmlFor="avatar-upload">
+            <Button
+              variant="outlined"
+              component="span"
+              startIcon={<PhotoCamera />}
+              fullWidth
+              sx={{ mb: 2 }}
+            >
+              Upload Photo
+            </Button>
+          </label>
+
+          <Divider sx={{ my: 2 }} />
+        </Paper>
+
+        <Paper
+          elevation={4}
+          sx={{ p: 3, borderRadius: 3, backgroundColor: "antiquewhite" }}
+        >
           <Typography variant="h5" color="secondary" gutterBottom>
             Change Password
           </Typography>
@@ -259,6 +272,7 @@ const Profile: React.FC = () => {
             navigate("/login");
           }}
         >
+          <Logout sx={{ mr: 1 }} />
           Logout
         </Button>
       </Container>
