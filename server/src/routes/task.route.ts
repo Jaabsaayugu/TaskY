@@ -1,9 +1,11 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { verifyToken } from "../middleware/verifyToken";
+import verifyUser from "../middleware/verifyUser";
 
-const router = Router();
+const router: Router = Router();
 const prisma = new PrismaClient();
+import { createTask, getTasks } from "../controllers/task.controller";
 
 // router.get("/", verifyToken,async (_req: Request, res: Response) => {
 //   try {
@@ -20,25 +22,25 @@ const prisma = new PrismaClient();
 //   }
 // });
 
-router.get("/", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.id;
+// router.get("/", verifyToken, async (req: Request, res: Response) => {
+//   try {
+//     const userId = req.user?.id;
 
-    const tasks = await prisma.task.findMany({
-      where: {
-        userId: userId,
-        isDeleted: false,
-      },
-      include: { user: true },
-      orderBy: { dateCreated: "desc" },
-    });
+//     const tasks = await prisma.task.findMany({
+//       where: {
+//         userId: userId,
+//         isDeleted: false,
+//       },
+//       include: { user: true },
+//       orderBy: { dateCreated: "desc" },
+//     });
 
-    res.json(tasks);
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    res.status(500).json({ message: "Failed to fetch tasks" });
-  }
-});
+//     res.json(tasks);
+//   } catch (error) {
+//     console.error("Error fetching tasks:", error);
+//     res.status(500).json({ message: "Failed to fetch tasks" });
+//   }
+// });
 
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -64,24 +66,27 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", verifyToken, async (req: Request, res: Response) => {
-  const { title, description } = req.body;
+router.post("/", verifyUser, createTask);
+router.get("/", verifyUser, getTasks)
 
-  try {
-    const task = await prisma.task.create({
-      data: {
-        title,
-        description,
-        userId: req.user!.id,
-      },
-    });
+// router.post("/", verifyToken, async (req: Request, res: Response) => {
+//   const { title, description } = req.body;
 
-    res.status(201).json(task);
-  } catch (error) {
-    console.error("Error creating task:", error);
-    res.status(500).json({ message: "Failed to create task" });
-  }
-});
+//   try {
+//     const task = await prisma.task.create({
+//       data: {
+//         title,
+//         description,
+//         userId: req.user!.id,
+//       },
+//     });
+
+//     res.status(201).json(task);
+//   } catch (error) {
+//     console.error("Error creating task:", error);
+//     res.status(500).json({ message: "Failed to create task" });
+//   }
+// });
 
 router.patch("/:id", verifyToken, async (req: Request, res: Response) => {
   const { id } = req.params;

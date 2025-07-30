@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   username: string;
   email: string;
+  avatar?: string;
   isDeleted: boolean;
   dateJoined: string;
   lastUpdate: string;

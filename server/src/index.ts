@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route";
 import userRouter from "./routes/user.route";
 import taskRouter from "./routes/task.route";
@@ -10,6 +11,8 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:5173",

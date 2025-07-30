@@ -26,6 +26,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import useUser from "../store/userStore";
 import axios from "axios";
+import axiosInstance from "../api/axios";
 
 const Login: React.FC = () => {
   const [tab, setTab] = useState(1);
