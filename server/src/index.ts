@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -36,6 +36,10 @@ app.use(
 
 app.get("/", (_req, res) => {
   res.send("<h1>Task-Y</h1>");
+});
+
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "OK", message: "API is running" });
 });
 
 // app.post("/auth/register", (_req, res)=> {
