@@ -6,11 +6,13 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import Header from "../components/Header";
 
 function LandingPage() {
   return (
     <>
       {/* Background Section */}
+      <Header/>
       <Stack
         sx={{
           backgroundImage:
