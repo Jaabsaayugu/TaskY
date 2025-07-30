@@ -142,7 +142,7 @@ const NewTask: React.FC = () => {
                     : ""
                 }
               />
-
+              <Box>
               <Button
                 type="submit"
                 variant="contained"
@@ -163,6 +163,7 @@ const NewTask: React.FC = () => {
               >
                 Cancel
               </Button>
+              </Box>
             </Stack>
           </form>
         </Paper>
