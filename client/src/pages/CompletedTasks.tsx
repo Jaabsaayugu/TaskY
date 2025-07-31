@@ -48,8 +48,11 @@ const CompletedTasks: React.FC = () => {
           },
         );
 
-        const tasksData = response.data.tasks || response.data;
-        setTasks(Array.isArray(tasksData) ? tasksData : []);
+        const tasksData = Array.isArray(response.data)
+          ? response.data
+          : (response.data as { tasks: Task[] }).tasks || [];
+
+        setTasks(tasksData);
         setError(null);
       } catch (error: any) {
         console.error("Failed to fetch completed tasks:", error);

@@ -42,21 +42,21 @@ function TaskList() {
       });
 
       if (!response.data) {
-  console.warn("No data received from /api/tasks");
-  return [];
-}
+        console.warn("No data received from /api/tasks");
+        return [];
+      }
       // console.log("Raw response from /api/tasks:", response.data);
 
       const tasks = Array.isArray(response.data)
         ? response.data
         : (response.data as { tasks: TaskType[] }).tasks || [];
 
-        if (!Array.isArray(tasks)) {
-  console.warn("Tasks is not an array:", tasks);
-  return [];
-}
+      if (!Array.isArray(tasks)) {
+        console.warn("Tasks is not an array:", tasks);
+        return [];
+      }
 
-return tasks.filter((task: TaskType) => task && !task.isDeleted);
+      return tasks.filter((task: TaskType) => task && !task.isDeleted);
     },
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 401) {

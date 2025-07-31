@@ -50,15 +50,18 @@ const Trash: React.FC = () => {
 
         console.log("Fetched deleted tasks:", response.data);
 
-        const tasksData = response.data.tasks || response.data;
+        const tasksData = Array.isArray(response.data)
+          ? response.data
+          : (response.data as { tasks: Task[] }).tasks || [];
 
-        if (Array.isArray(tasksData)) {
-          setTasks(tasksData);
-        } else {
+        if (!Array.isArray(tasksData)) {
           console.warn("Expected an array but got:", tasksData);
           setTasks([]);
+          setError(null);
+          return;
         }
 
+        setTasks(tasksData);
         setError(null);
       } catch (error: any) {
         console.error("Failed to fetch deleted tasks:", error);

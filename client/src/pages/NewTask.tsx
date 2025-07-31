@@ -142,26 +142,26 @@ const NewTask: React.FC = () => {
                 }
               />
               <Box>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isPending}
-                size="large"
-                sx={{ minWidth: 150 }}
-              >
-                {isPending ? "Creating..." : "Create Task"}
-              </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={isPending}
+                  size="large"
+                  sx={{ minWidth: 150 }}
+                >
+                  {isPending ? "Creating..." : "Create Task"}
+                </Button>
 
-              <Button
-                type="button"
-                variant="outlined"
-                size="large"
-                onClick={handleCancel}
-                disabled={isPending}
-                sx={{ minWidth: 100 }}
-              >
-                Cancel
-              </Button>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  size="large"
+                  onClick={handleCancel}
+                  disabled={isPending}
+                  sx={{ minWidth: 100 }}
+                >
+                  Cancel
+                </Button>
               </Box>
             </Stack>
           </form>

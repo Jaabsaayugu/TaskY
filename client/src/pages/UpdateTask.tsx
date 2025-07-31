@@ -46,7 +46,19 @@ const UpdateTask: React.FC = () => {
           },
         });
 
-        const taskData = response.data.task || response.data;
+        const taskData =
+          response.data &&
+          typeof response.data === "object" &&
+          "task" in response.data
+            ? (response.data as { task: Task }).task
+            : (response.data as Task);
+
+        if (!taskData || typeof taskData !== "object" || !taskData.id) {
+          console.warn("Invalid task data:", taskData);
+          setError("Invalid task data received");
+          return;
+        }
+
         setTask(taskData);
         setTitle(taskData.title);
         setDescription(taskData.description);
@@ -66,7 +78,7 @@ const UpdateTask: React.FC = () => {
           setError("Failed to fetch task. Please try again.");
         }
 
-        setTimeout(() => navigate("/taskList"), 30000);
+        setTimeout(() => navigate("/taskList"), 300000);
       } finally {
         setLoading(false);
       }
