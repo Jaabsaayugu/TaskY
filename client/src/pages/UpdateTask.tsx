@@ -66,7 +66,7 @@ const UpdateTask: React.FC = () => {
           setError("Failed to fetch task. Please try again.");
         }
 
-        setTimeout(() => navigate("/taskList"), 3000);
+        setTimeout(() => navigate("/taskList"), 30000);
       } finally {
         setLoading(false);
       }
