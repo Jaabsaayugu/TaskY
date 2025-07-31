@@ -7,13 +7,12 @@ import {
   Stack,
   Paper,
   Alert,
-  Grid,
+  Box,
 } from "@mui/material";
 import axiosInstance from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/footer";
 import { useMutation } from "@tanstack/react-query";
-import { Box } from "lucide-react";
 
 interface NewTask {
   title: string;
